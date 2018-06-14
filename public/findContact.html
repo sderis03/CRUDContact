@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Find a Contact</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <style>
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <script>
+        $(function() {
+            $("#findContactForm").submit(function(event) {
+                event.preventDefault();
+
+                var errorMessage = $("#errorMessage");
+                var error = $("#error");
+                error.hide();
+
+                $("#message").hide();
+
+                var contactID = $("#contactID").val();
+
+
+                if (contactID.length == 0) {
+                    errorMessage.text("Need ID");
+                    error.show();
+                }
+                else {
+                    $.ajax({
+                        url: event.target.action,
+                        method: event.target.method,
+                        data: JSON.stringify({
+                            contactID: contactID,
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(data) {
+                            $("#contactID").val("");
+                            $("#messageMessage").text("Record Below");
+                            $("#firstName").text(this.responseText);
+                            $("#message").show();
+                        },
+                        error: function(err) {
+                            errorMessage.text(err.responseJSON.error);
+                            error.show();
+                        }
+                    })
+                }
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Menu</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <form id="findContactForm" action="/read" method="post" style="width: 400px">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Find Contact</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="contactID">Contact's ID</label>
+                        <input type="text" class="form-control" id="contactID" placeholder="Required" required>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div id="message" class="alert alert-info" role="alert" style="display: none;">
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        <span id="messageMessage"></span>
+                    </div>
+                    <div id="error" class="alert alert-danger" role="alert" style="display: none;">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        <span id="errorMessage"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Find Contact</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <form id="findContactForm" action="/read" method="post" style="width: 400px">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Contact Info </h3>
+                </div>
+                <div class="panel-body">
+                  <div class="form-group">
+                      <label for="firstName">First Name</label>
+                    <div id= "firstName"></div>
+                  </div>
+                  <div class="form-group">
+                      <label for="LastName">Last Name</label>
+                    <div id= "lastName"></div>
+                  </div>
+            </div>
+        </form>
+    </div>
+
+
+
+
+
+
+</body>
+</html>
